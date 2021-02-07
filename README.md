@@ -18,6 +18,16 @@ To stop current topic: ``` stop ```
 To open log file in notepad: ``` open ```
 
 
+Here is an example of an entry in the txt file:
+
+```
+@ml:
+-  start:  15:02
+-  notes:
+-  -  semi-supervised learning
+-  stop:   15:08
+```
+
 ## Making figures
 After you have created a couple of log files, you can run generate_figures.py to generate figures.
 ```
