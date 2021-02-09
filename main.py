@@ -8,6 +8,17 @@ import os
 import datetime
 import argparse
 import matplotlib.pyplot as plt
+import subprocess
+
+
+def process_exists(process_name):
+    call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
+    # use buildin check_output right away
+    output = subprocess.check_output(call).decode()
+    # check in last line for process name
+    last_line = output.strip().split('\r\n')[-1]
+    # because Fail message could be translated
+    return last_line.lower().startswith(process_name.lower())
 
 
 class time_logger:
@@ -32,36 +43,36 @@ class time_logger:
 			self.open_log()
 		else:
 			# help 
-			print('To start a new topic: start {TOPIC}')
-			print('To add a note on current topic: note {NOTE}')
-			print('To stop current topic: stop')
-			print('To open log file in notepad: open')
+			print('# To start a new topic: start {TOPIC}')
+			print('# To add a note on current topic: note {NOTE}')
+			print('# To stop current topic: stop')
+			print('# To open log file in notepad: open')
 			print('')
 
 	def start(self, topic):
 		if topic != '' and self.topic == '':
 			current_time = datetime.datetime.now().strftime("%H:%M")
-			print("Starting new topic '{}' at {}".format(topic, current_time))
+			print("# Starting new topic '{}' at {}".format(topic, current_time))
 			self.topic = topic
 			with open(log_path, 'a') as fp:
 				fp.write(f'@{topic}:\n')
 				fp.write(f'-  start:  {current_time}\n')
 			self.last_action = 'start'
 		else:
-			print(f"Unable to add new topic. Current topic is '{self.topic}'")
+			print(f"# Unable to add new topic. Current topic is '{self.topic}'")
 			
 	def stop(self):
 		if self.topic != '':
 			current_time = datetime.datetime.now().strftime("%H:%M")
 			# self.last_action_time = current_time
-			print(f"Stopping current topic '{self.topic}' at {current_time}")
+			print(f"# Stopping current topic '{self.topic}' at {current_time}")
 			
 			self.topic = ''
 			with open(log_path, 'a') as fp:
 				fp.write(f'-  stop:   {current_time}\n\n')
 			self.last_action = 'stop'
 		else: 
-			print('Unable to stop. There is no current topic.')
+			print('# Unable to stop. There is no current topic.')
 
 	def note(self, note_str):
 		current_time = datetime.datetime.now().strftime("%H:%M")
@@ -73,10 +84,13 @@ class time_logger:
 				fp.write(f'-  -  {note_str}\n')
 			self.last_action = 'note'
 		else:
-			print('Unable to add note when there is no current topic.')
+			print('# Unable to add note when there is no current topic.')
 	def open_log(self):
+		print('# Pausing for editing. All commands in prompt will be ignored.')
 		os.startfile(log_path)
-		input("Press enter once done manually editing.")
+		while(process_exists('notepad.exe')):
+			input()
+		print('# Finished editing. Notepad.exe has been closed.')
 	
 
 parser = argparse.ArgumentParser()
@@ -91,7 +105,7 @@ cur_day =  datetime.date.today().strftime("%d")
 
 
 m_time_logger = time_logger(log_path)
-print('Starting time logger. Type help to see commands.')
+print('# Starting time logger. Type help to see commands.')
 while(cur_day == datetime.date.today().strftime("%d")):
 	try:
 		input_str = input("") 
@@ -100,7 +114,7 @@ while(cur_day == datetime.date.today().strftime("%d")):
 		m_time_logger.stop()
 		sys.exit()
 
-print('It is a new day now. Re-run script to generate new txt file.')
+print('# It is a new day now. Re-run script to generate new txt file.')
 
 
 
