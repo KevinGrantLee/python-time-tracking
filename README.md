@@ -33,5 +33,5 @@ After you have created a couple of log files, you can run generate_figures.py to
 ```
 python generate_figures.py 
 ```
-Currently the code generates a histogram of daily time per topic, a pie chart of total time per topic, and a weekly time histogram. 
+Currently the code generates a histogram of daily time per topic, a pie chart of total time per topic, a weekly histogram, and a calendar heatmap (looks like the github contribution graph). 
 
