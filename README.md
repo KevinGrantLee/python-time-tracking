@@ -1,6 +1,8 @@
 # python-time-tracking
 
-This is a simple plain text time tracking tool. main.py creates a txt file for each day and generate_figures.py can be used to save figures. 
+This is a simple plain text time tracking tool. 
+
+```main.py``` creates a txt file for each day and ```generate_figures.py``` creates and saves figures.
 
 ## Usage
 ```
@@ -29,7 +31,7 @@ Here is an example of an entry in the txt file:
 ```
 
 ## Making figures
-After you have created a couple of log files, you can run generate_figures.py to generate figures. generate_figures.py parses all log files (in the selected folder) and summarizes the content in figures.
+After you have created a couple of log files, you can run ```generate_figures.py``` to generate figures. ```generate_figures.py``` parses all log files (in the selected folder) and summarizes the content in figures.
 ```
 python generate_figures.py 
 ```
