@@ -29,7 +29,7 @@ Here is an example of an entry in the txt file:
 ```
 
 ## Making figures
-After you have created a couple of log files, you can run generate_figures.py to generate figures. generate_figures.py parses all log files and summarizes the content in figures.
+After you have created a couple of log files, you can run generate_figures.py to generate figures. generate_figures.py parses all log files (in the selected folder) and summarizes the content in figures.
 ```
 python generate_figures.py 
 ```
