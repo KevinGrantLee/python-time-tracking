@@ -70,13 +70,17 @@ class Time_Logger:
 	
 	def open_log(self):
 		os.startfile(log_path)
-		while(process_exists('notepad.exe')):
+		while(process_exists('notepad.exe')): # change this to YOUR default txt editor.
 			print('# Pausing for editing. Press "Enter" to continue after notepad.exe is closed.')
 			input()
 		print('# Finished editing. Notepad.exe has been closed.')
 	
 
 def process_exists(process_name):
+	"""Returns True if {process_name} is running. Else, False
+
+	This works on Windows - idk about about other OS.
+	"""
     call = 'TASKLIST', '/FI', 'imagename eq %s' % process_name
     # use buildin check_output right away
     output = subprocess.check_output(call).decode()
