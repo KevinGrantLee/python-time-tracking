@@ -6,7 +6,7 @@ This is a simple plain text time tracking tool.
 
 ## Usage
 ```
-python main.py 
+python main.py [-d dir]
 ```
 
 Once the script is running, there are 4 commands:
@@ -33,7 +33,7 @@ Here is an example of an entry in the txt file:
 ## Making figures
 After you have created a couple of log files, you can run ```generate_figures.py``` to generate figures. ```generate_figures.py``` parses all log files (in the selected folder) and summarizes the content in figures.
 ```
-python generate_figures.py 
+python generate_figures.py [-d dir]
 ```
 Currently the code generates a histogram of daily time per topic, a pie chart of total time per topic, a weekly histogram, and a calendar heatmap (looks like the github contribution graph). 
 
