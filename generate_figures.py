@@ -61,6 +61,7 @@ end_date = convert2date(os.listdir(args.dir)[-1].replace('.txt','')) # gets the 
 delta = datetime.timedelta(days=1)
 
 cnt = 0
+minutes_log = np.zeros(24*60)
 while start_date <= end_date:
 	date_str = start_date.strftime("%m-%d-%Y")
 	if cnt % 7 == 0:
@@ -100,6 +101,13 @@ for mfile in os.listdir(args.dir):
 				cur_day_data[last_topic] += elapsed_time
 				num_stops += 1
 				assert num_stops == num_starts
+
+				hour, minutes = start_time.split(':')
+				start_minute = 60*int(hour)+int(minutes)
+				hour, minutes = stop_time.split(':')
+				end_minute = 60*int(hour)+int(minutes)
+				minutes_log[start_minute:end_minute] += np.ones(end_minute-start_minute) 
+
 			# ignoring 'notes' lines
 
 time_per_topics = {mkey: round(time_per_topics[mkey], 3) for mkey in time_per_topics.keys()}
@@ -204,8 +212,34 @@ calplot.calplot(events, dropzero=True, cmap='YlGn')
 plt.savefig('calendar heatmap.png')
 
 
-# ### daily time hexbin
-# df = pd.DataFrame( np.vstack((np.arange(len(X)), X)).T, columns=["a", "b"])
-# plt.figure()
-# df.plot.hexbin(x="a", y="b", gridsize=35)
-# plt.savefig('Daily time hexbin.png')
+### clock figure showing what times i usually work
+N = 24
+bottom = 30
+
+# width of each bin on the plot
+width = (2*np.pi) / N
+
+# create theta for 24 hours
+theta = np.arange(width/2, 2*np.pi, width)
+
+# create the data
+hour_log = minutes_log.reshape((24,60)).sum(axis=1)
+
+# make a polar plot
+plt.figure(figsize = (12, 8))
+ax = plt.subplot(111, polar=True)
+bars = ax.bar(theta, hour_log, width=width, bottom=bottom)
+
+# set the lable go clockwise and start from the top
+ax.set_theta_zero_location("N")
+
+# clockwise
+ax.set_theta_direction(-1)
+
+# set labels
+ticks = [f'{hour}:00' for hour in range(24)]
+ax.set_xticks(np.linspace(0, 2*np.pi, 24, endpoint=False))
+ax.set_xticklabels(ticks)
+ax.set_yticklabels([])
+
+plt.savefig('productive time clock figure.png')

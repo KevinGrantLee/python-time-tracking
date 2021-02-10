@@ -109,11 +109,13 @@ run_day = run_date.split('-')[1]
 time_logger = Time_Logger(log_path)
 print('# Time logger is running. Type "help" to see commands.')
 while(run_day == datetime.date.today().strftime("%d")):
-	cur_time = datetime.datetime.now().strftime("%H:%M")
+	
 	try:
 		input_str = input() 
+		cur_time = datetime.datetime.now().strftime("%H:%M")
 		time_logger.read_input(input_str, cur_time)
 	except KeyboardInterrupt:
+		cur_time = datetime.datetime.now().strftime("%H:%M")
 		time_logger.stop(cur_time)
 		sys.exit()
 
