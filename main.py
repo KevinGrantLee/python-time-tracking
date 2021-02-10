@@ -98,9 +98,9 @@ args = parser.parse_args()
 if not os.path.isdir(args.dir):
 	os.makedirs(args.dir)
 
-cur_date = datetime.date.today().strftime("%m-%d-%Y")
-log_path = os.path.join(args.dir, cur_date+'.txt')
-cur_day = int(cur_date.split('-')[1])
+run_date = datetime.date.today().strftime("%m-%d-%Y")
+log_path = os.path.join(args.dir, run_date+'.txt')
+run_day = run_date.split('-')[1]
 
 ### check if format of log file is correct
 
@@ -108,7 +108,7 @@ cur_day = int(cur_date.split('-')[1])
 ### run time logger
 time_logger = Time_Logger(log_path)
 print('# Time logger is running. Type "help" to see commands.')
-while(cur_day == datetime.date.today().strftime("%d")):
+while(run_day == datetime.date.today().strftime("%d")):
 	cur_time = datetime.datetime.now().strftime("%H:%M")
 	try:
 		input_str = input() 
