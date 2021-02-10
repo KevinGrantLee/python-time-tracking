@@ -98,10 +98,9 @@ args = parser.parse_args()
 if not os.path.isdir(args.dir):
 	os.makedirs(args.dir)
 
-m, d, y = datetime.date.today().strftime("%m-%d-%Y").split('-')
-log_path = os.path.join(args.dir, '-'.join((m,d,y))+'.txt')
-cur_day = d
-
+cur_date = datetime.date.today().strftime("%m-%d-%Y")
+log_path = os.path.join(args.dir, cur_date+'.txt')
+cur_day = int(cur_date.split('-')[1])
 
 ### check if format of log file is correct
 
