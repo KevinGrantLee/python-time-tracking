@@ -37,3 +37,6 @@ python generate_figures.py [-d dir]
 ```
 Currently the code generates a histogram of daily time per topic, a pie chart of total time per topic, a weekly histogram, and a calendar heatmap (looks like the github contribution graph). 
 
+Here is an example figure, showing at what times I am most productive:
+![alt text](https://github.com/KevinGrantLee/python-time-tracking/blob/main/example_figure.png?raw=true)
+
