@@ -92,7 +92,7 @@ def process_exists(process_name):
 
 ### main
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--dir', default='logs', 
+parser.add_argument('-d', '--dir', default='2021_logs', 
     help='relative path to save current day txt file')
 args = parser.parse_args()
 if not os.path.isdir(args.dir):

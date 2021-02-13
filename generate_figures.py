@@ -47,24 +47,26 @@ def days_elapsed(start, end):
 
 ### initializing data
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--dir', default='logs', 
+parser.add_argument('-d', '--dir', default='2021_logs', 
     help="relative path to save current day txt file")
+parser.add_argument('-y', '--year', default='2021', 
+    help='Year of data')
 args = parser.parse_args()
 
 time_per_topics = {}
 time_per_day_per_topics = {}
 
-print('TODO: code is harcoded to date from 1-1-2021')
 week_labels = []
-start_date = convert2date('1-1-2021')
+start_date = convert2date('1-1-'+args.year)
 end_date = convert2date(os.listdir(args.dir)[-1].replace('.txt','')) # gets the most recent txt file in directory
 delta = datetime.timedelta(days=1)
+
 
 cnt = 0
 minutes_log = np.zeros(24*60)
 while start_date <= end_date:
 	date_str = start_date.strftime("%m-%d-%Y")
-	if cnt % 7 == 0:
+	if cnt % 14 == 0:
 		week_labels.append(date_str)
 	time_per_day_per_topics.setdefault(date_str, {}) # we assign missing days a total time of 0 hours
 	start_date += delta
@@ -73,7 +75,7 @@ while start_date <= end_date:
 
 ### parsing txt files
 for mfile in os.listdir(args.dir):
-	# should check if is valid log file
+
 	day_key = mfile.replace('.txt','')
 	cur_day_data = time_per_day_per_topics[day_key]
 
@@ -113,7 +115,7 @@ for mfile in os.listdir(args.dir):
 time_per_topics = {mkey: round(time_per_topics[mkey], 3) for mkey in time_per_topics.keys()}
 time_per_day = {mkey: round(sum(time_per_day_per_topics[mkey].values()),3) \
 	for mkey in time_per_day_per_topics.keys()}
-
+	
 
 ### constructing separate daily counts for each topic
 print('TODO: verify separated_time_per_day is accurate. im like 80% sure')
@@ -128,7 +130,7 @@ for topic in time_per_topics.keys():
 X = np.zeros(365)
 for cnt, (key, val) in enumerate(time_per_day.items()):
 	# convert key to index
-	idx = days_elapsed('1-1-2021', key)
+	idx = days_elapsed('1-1-'+args.year, key)
 	X[idx] = val
 	last_idx = idx
 
@@ -143,7 +145,7 @@ plt.plot(X, '.', label='Daily Time')
 plt.plot(avg_X_arr, label=f'Average Time = {round(avg_X_arr[0],2)}')
 plt.xlabel('Days')
 plt.ylabel('Hours')
-plt.xticks(np.arange(0, len(X), 7), week_labels, rotation=70)
+plt.xticks(np.arange(0, len(X), 14), week_labels, rotation=70)
 plt.tight_layout() # make space for rotated xtick labels
 plt.legend()
 plt.savefig('Daily time.png')
@@ -184,17 +186,17 @@ print('TODO: something wrong with daily time histogram - density sum >= 1 for so
 
 
 ### weekly time, separated by topic
-ind = np.arange(math.ceil(len(time_per_day.keys())/7))
+ind = np.arange(math.ceil(len(time_per_day.keys())/14))
 bottom_sum = np.zeros(len(ind))
 
 plt.figure()
 for cnt, (mtopic, val) in enumerate(separated_time_per_day.items()):
-	every_seven_days_sum = np.add.reduceat(val, np.arange(0, len(val), 7))
+	every_fourteen_days_sum = np.add.reduceat(val, np.arange(0, len(val), 14))
 	if cnt ==  0:
-		plt.bar(ind, every_seven_days_sum, label=mtopic)
+		plt.bar(ind, every_fourteen_days_sum, label=mtopic)
 	else:
-		plt.bar(ind, every_seven_days_sum, label=mtopic, bottom=bottom_sum)
-	bottom_sum += every_seven_days_sum
+		plt.bar(ind, every_fourteen_days_sum, label=mtopic, bottom=bottom_sum)
+	bottom_sum += every_fourteen_days_sum
 plt.xticks(ind, week_labels, rotation=70)
 plt.xlabel('Weeks')
 plt.ylabel('Hours')
@@ -205,7 +207,7 @@ plt.savefig('weekly time stacked.png')
 
 ### calendar heatmap
 # https://pythonawesome.com/calendar-heatmaps-from-pandas-time-series-data/
-all_days = pd.date_range('1/1/2021', periods=days_elapsed('1-1-2021', end_date.strftime("%m-%d-%Y"))+1)
+all_days = pd.date_range('1/1/'+args.year, periods=days_elapsed('1-1-'+args.year, end_date.strftime("%m-%d-%Y"))+1)
 events = pd.Series(X, index=all_days)
 plt.figure()
 calplot.calplot(events, dropzero=True, cmap='YlGn')
@@ -214,7 +216,7 @@ plt.savefig('calendar heatmap.png')
 
 ### clock figure showing what times i usually work
 N = 24
-bottom = 30
+bottom = 60
 
 # width of each bin on the plot
 width = (2*np.pi) / N
