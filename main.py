@@ -1,8 +1,20 @@
+"""Time Tracker
+
+This script is a simple plain-text time tracker. 
+
+This tool generates .txt files in a directory of your choice.
+
+The default directory can be set.
+"""
+
+
 import sys
 import os
 import datetime
 import argparse
 import subprocess
+
+from generate_figures import run
 
 
 class Time_Logger:
@@ -14,7 +26,8 @@ class Time_Logger:
 		self.last_action = ''
 
 
-	def read_input(self, input_str, cur_time):
+	def read_input(self, input_str):
+		cur_time = datetime.datetime.now().strftime("%H:%M")
 		x = input_str.split(' ')
 		command = x[0]
 		argument = (' ').join(x[1:])
@@ -94,6 +107,8 @@ def process_exists(process_name):
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--dir', default='2021_logs', 
     help='relative path to save current day txt file')
+parser.add_argument('-y', '--year', default='2021', 
+    help='year of data')
 args = parser.parse_args()
 if not os.path.isdir(args.dir):
 	os.makedirs(args.dir)
@@ -102,6 +117,12 @@ run_date = datetime.date.today().strftime("%m-%d-%Y")
 log_path = os.path.join(args.dir, run_date+'.txt')
 run_day = run_date.split('-')[1]
 
+
+### generate figures
+print('# Generating figures')
+run(args)
+print('# Done generating figures\n')
+
 ### check if format of log file is correct
 
 
@@ -109,14 +130,14 @@ run_day = run_date.split('-')[1]
 time_logger = Time_Logger(log_path)
 print('# Time logger is running. Type "help" to see commands.')
 while(run_day == datetime.date.today().strftime("%d")):
-	
 	try:
 		input_str = input() 
-		cur_time = datetime.datetime.now().strftime("%H:%M")
-		time_logger.read_input(input_str, cur_time)
+		time_logger.read_input(input_str)
 	except KeyboardInterrupt:
 		cur_time = datetime.datetime.now().strftime("%H:%M")
 		time_logger.stop(cur_time)
 		sys.exit()
 
+cur_time = datetime.datetime.now().strftime("%H:%M")
+time_logger.stop(cur_time)
 print('# It is a new day now. Re-run script to generate new txt file.')
