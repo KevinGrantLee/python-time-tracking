@@ -11,14 +11,13 @@ Be sure to set the correct directory of the log files and the year of the earlie
 import os 
 import argparse
 import datetime
-
+import configparser
 import math
 
 import numpy as np
-import pandas as pd
-from scipy.stats import norm
+# import pandas as pd
 import matplotlib.pyplot as plt
-import calplot
+# import calplot
 
 
 def convert2date(date):
@@ -132,11 +131,13 @@ def run(args):
 		for mkey in time_per_day_per_topics.keys()}
 
 	topics = list(time_per_topics.keys())
-	topics = [topics[i]+'\n' for i in range(len(topics))]
 	print(f'Topics are {topics}')
 
-	with open('topics.txt', 'w') as fp:
-		fp.writelines((topics))
+	config = configparser.ConfigParser()
+	config.read('settings.ini')
+	config['DEFAULT']['Topics'] = ', '.join(topics)
+	with open('settings.ini', 'w') as configfile:
+		config.write(configfile)
 		
 
 	### constructing separate daily counts for each topic
@@ -197,8 +198,11 @@ def run(args):
 
 	xmin, xmax = plt.xlim()
 	x = np.linspace(xmin, xmax, 100)
-	mu, std = norm.fit(X)
-	p = norm.pdf(x, mu, std)
+	mu = np.mean(X)
+	std = np.std(X)
+	p = (1/np.sqrt(2*np.pi*std**2)) * np.exp( (-0.5*(x-mu)**2)/std**2 )
+
+
 	plt.plot(x, p, 'k', linewidth=2, label=f'N{round(mu,2), round(std**2,2)}')
 
 	plt.xlabel('Hours')
@@ -235,12 +239,14 @@ def run(args):
 
 	### calendar heatmap
 	# https://pythonawesome.com/calendar-heatmaps-from-pandas-time-series-data/
-	all_days = pd.date_range('1/1/'+args.year, periods=days_elapsed('1-1-'+args.year, end_date.strftime("%m-%d-%Y"))+1)
-	events = pd.Series(X, index=all_days)
-	plt.figure()
-	calplot.calplot(events, dropzero=True, cmap='YlGn')
-	plt.savefig(os.path.join(args.figdir,'calendar heatmap.png'))
-	plt.close()
+	try_not_use_pandas = False
+	if try_not_use_pandas:
+		all_days = pd.date_range('1/1/'+args.year, periods=days_elapsed('1-1-'+args.year, end_date.strftime("%m-%d-%Y"))+1)
+		events = pd.Series(X, index=all_days)
+		plt.figure()
+		calplot.calplot(events, dropzero=True, cmap='YlGn')
+		plt.savefig(os.path.join(args.figdir,'calendar heatmap.png'))
+		plt.close()
 
 
 

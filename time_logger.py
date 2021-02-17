@@ -105,6 +105,21 @@ def process_exists(process_name):
     # because Fail message could be translated
     return last_line.lower().startswith(process_name.lower())
 
+def check_times(start_time, stop_time):
+    """Returns True if stop_time >= start_time. Else, False
+
+    start_time and stop_time are each string tuples of form '{HOURS}:{MINUTES}')
+    """
+    start_h, start_m = start_time.split(':')
+    stop_h, stop_m = stop_time.split(':')
+
+    if stop_h > start_h:
+        return True
+    elif stop_h == start_h and stop_m >= start_m:
+        return True
+    else:
+        return False
+
 
 def run(args):
     run_date = datetime.date.today().strftime("%m-%d-%Y")
