@@ -2,11 +2,13 @@
 
 This is a simple plain text time tracking tool. 
 
-```main.py``` creates a txt file for each day and ```generate_figures.py``` creates and saves figures.
+```time_logger.py``` creates a txt file for each day and ```generate_figures.py``` creates and saves figures.
+
+```gui_time_logger.py``` has a GUI created with PySimpleGUI.
 
 ## Usage
 ```
-python main.py [-d dir]
+python time_logger.py [-d dir]
 ```
 
 Once the script is running, there are 4 commands:
