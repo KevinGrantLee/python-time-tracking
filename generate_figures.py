@@ -130,7 +130,13 @@ def run(args):
 	time_per_topics = {mkey: round(time_per_topics[mkey], 3) for mkey in time_per_topics.keys()}
 	time_per_day = {mkey: round(sum(time_per_day_per_topics[mkey].values()),3) \
 		for mkey in time_per_day_per_topics.keys()}
-	print(f'Topics are {list(time_per_topics.keys())}')
+
+	topics = list(time_per_topics.keys())
+	topics = [topics[i]+'\n' for i in range(len(topics))]
+	print(f'Topics are {topics}')
+
+	with open('topics.txt', 'w') as fp:
+		fp.writelines((topics))
 		
 
 	### constructing separate daily counts for each topic
@@ -164,7 +170,8 @@ def run(args):
 	plt.xticks(np.arange(0, len(X), 7), biweek_labels, rotation=70)
 	plt.tight_layout() # make space for rotated xtick labels
 	plt.legend()
-	plt.savefig('Daily time.png')
+	plt.savefig(os.path.join(args.figdir,'Daily time.png'))
+	plt.close()
 
 
 	### pie chart of time per topic
@@ -180,7 +187,8 @@ def run(args):
 	values = time_per_topics.values()
 	plt.figure()
 	plt.pie(values, labels=time_per_topics.keys(), autopct=make_autopct(values))
-	plt.savefig('Pie chart.png')
+	plt.savefig(os.path.join(args.figdir,'Pie chart.png'))
+	plt.close()
 
 
 	### histogram of total daily time, stacked
@@ -197,7 +205,9 @@ def run(args):
 	plt.ylabel('Frequency')
 	plt.legend()
 	plt.title('daily time histogram')
-	plt.savefig('Daily time histogram.png')
+	plt.savefig(os.path.join(args.figdir,'Daily time histogram.png'))
+	plt.close()
+
 	print('TODO: something wrong with daily time histogram - density sum >= 1 for some hours. is this ok for stacked?')
 
 
@@ -218,7 +228,9 @@ def run(args):
 	plt.ylabel('Hours')
 	plt.legend()
 	plt.tight_layout() # make space for rotated xtick labels
-	plt.savefig('weekly time stacked.png')
+	plt.savefig(os.path.join(args.figdir,'weekly time stacked.png'))
+	plt.close()
+
 
 
 	### calendar heatmap
@@ -227,7 +239,9 @@ def run(args):
 	events = pd.Series(X, index=all_days)
 	plt.figure()
 	calplot.calplot(events, dropzero=True, cmap='YlGn')
-	plt.savefig('calendar heatmap.png')
+	plt.savefig(os.path.join(args.figdir,'calendar heatmap.png'))
+	plt.close()
+
 
 
 	### clock figure showing what times i usually work
@@ -260,13 +274,18 @@ def run(args):
 	ax.set_xticklabels(ticks)
 	ax.set_yticklabels([])
 
-	plt.savefig('productive time clock figure.png')
+	plt.savefig(os.path.join(args.figdir, 'productive time clock figure.png'))
+	plt.close()
+
+	print('done generating figures')
 
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-d', '--dir', default='2021_logs', 
 	    help="relative path to save current day txt file")
+	parser.add_argument('-f', '--figdir', default='figures', 
+	    help="folder to save figures in")
 	parser.add_argument('-y', '--year', default='2021', 
 	    help='Year of data')
 	args = parser.parse_args()
