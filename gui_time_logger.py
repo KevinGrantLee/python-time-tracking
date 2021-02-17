@@ -133,6 +133,9 @@ while True:
         topic = values['-TOPIC-']
         if values['-STARTH-'] == '' or values['-STARTM-'] == '':
             start_time = cur_time
+            start_h, start_m = start_time.split(':')
+            window['-STARTH-'](start_h)
+            window['-STARTM-'](start_m)
         else:
             start_time = ':'.join([values['-STARTH-'], values['-STARTM-']])
         m_time_logger.start(topic, time=start_time)
