@@ -5,6 +5,9 @@ This is a simple plain text time tracking tool.
 ```time_logger.py``` creates a txt file for each day and ```generate_figures.py``` creates and saves figures.
 
 ```gui_time_logger.py``` has a GUI created with PySimpleGUI.
+Here is a picture of the GUI:
+![alt text](https://github.com/KevinGrantLee/python-time-tracking/blob/main/gui.png?raw=true)
+
 
 ## Usage
 ```
