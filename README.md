@@ -6,7 +6,7 @@ This is a simple plain text time tracking tool.
 
 ```gui_time_logger.py``` has a GUI created with PySimpleGUI.
 Here is a picture of the GUI:
-![alt text](https://github.com/KevinGrantLee/python-time-tracking/blob/main/gui.png?raw=true)
+![alt text](https://github.com/KevinGrantLee/python-time-tracking/blob/main/gui.JPG?raw=true)
 
 
 ## Usage
