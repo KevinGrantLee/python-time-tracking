@@ -98,22 +98,18 @@ window = sg.Window(f'Time Logger : {run_date}', layout, icon='icon.ico', resizab
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
+    event, values = window.read()
+
     cur_time = datetime.datetime.now().strftime("%H:%M")
     if run_date != datetime.date.today().strftime("%m-%d-%Y"):
         sg.Popup('It is a new day now. Application will exit.', title='Info', keep_on_top=True)
         m_time_logger.stop()
         break
 
-    event, values = window.read()
     # print('event=',event)
     if event == sg.WIN_CLOSED: # if user closes window or clicks cancel
         m_time_logger.stop()
         break
-
-
-    # if values['-FOLDER-'] == '':
-    #     sg.Popup('Please choose a folder to save logs in.', keep_on_top=True)
-    #     continue
 
     os.makedirs('figures', exist_ok=True)
     args = Namespace(dir=values['-FOLDER-'], figdir='figures', year=values['-YEAR-'])
