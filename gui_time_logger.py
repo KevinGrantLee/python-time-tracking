@@ -127,13 +127,18 @@ while True:
 
         # processing data
         topic = values['-TOPIC-']
-        if values['-STARTH-'] == '' or values['-STARTM-'] == '':
+        if values['-STARTH-'] == '' and values['-STARTM-'] == '':
             start_time = cur_time
+
             start_h, start_m = start_time.split(':')
             window['-STARTH-'](start_h)
             window['-STARTM-'](start_m)
-        else:
+        elif values['-STARTH-'] != '' and values['-STARTM-'] != '':
             start_time = ':'.join([values['-STARTH-'], values['-STARTM-']])
+        else:
+            sg.Popup('Please choose a valid start time.', title='Error', keep_on_top=True)
+            continue
+
         m_time_logger.start(topic, time=start_time)
         
         window['-TOPIC-'](disabled=True)
@@ -151,14 +156,15 @@ while True:
 
     elif event == '-STOP-':
         # processing data
-        if values['-STOPH-'] == '' or values['-STOPM-'] == '':
+        if values['-STOPH-'] == '' and values['-STOPM-'] == '':
             stop_time = cur_time
-        else:
+        elif values['-STOPH-'] != '' and values['-STOPM-'] != '':
             stop_time = ':'.join([values['-STOPH-'], values['-STOPM-']])
-        
-
-        if not tl.check_times(start_time, stop_time):
+        else:
             sg.Popup('Please enter a valid stop time.', title='Error', keep_on_top=True)
+            continue
+        if not tl.check_times(start_time, stop_time):
+            sg.Popup('Stop time is before start time.', title='Error', keep_on_top=True)
             continue
 
         m_time_logger.stop(time=stop_time)
