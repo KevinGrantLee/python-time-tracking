@@ -67,7 +67,6 @@ def run(args):
 	end_date = convert2date(os.listdir(args.dir)[-1].replace('.txt','')) # gets the most recent txt file in directory
 	delta = datetime.timedelta(days=1)
 
-
 	cnt = 0
 	minutes_log = np.zeros(24*60)
 	while start_date <= end_date:
@@ -84,6 +83,8 @@ def run(args):
 	ind = np.arange(1, 2*len(biweek_labels)-1, 2)
 	for i in ind:
 		biweek_labels.insert(i, '')
+	if biweek_labels[-1] != '':
+		biweek_labels.append('')
 	# print(biweek_labels)
 
 
@@ -159,7 +160,6 @@ def run(args):
 
 	X = np.resize(X, last_idx+1) # only log up to the current day
 	avg_X_arr = X.mean()*np.ones(len(X))
-
 
 	### scatter plot of daily time
 	plt.figure()
