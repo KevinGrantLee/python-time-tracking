@@ -63,7 +63,9 @@ def run(args):
 
 	week_labels = []
 	biweek_labels = []
-	start_date = convert2date('1-1-'+args.year)
+	y,m,d = args.startdate.split('-')
+	start_date = convert2date('-'.join([m,d,y]))
+	str_start_date = start_date.strftime("%m-%d-%Y")
 	end_date = convert2date(os.listdir(args.dir)[-1].replace('.txt','')) # gets the most recent txt file in directory
 	delta = datetime.timedelta(days=1)
 
@@ -83,8 +85,8 @@ def run(args):
 	ind = np.arange(1, 2*len(biweek_labels)-1, 2)
 	for i in ind:
 		biweek_labels.insert(i, '')
-	if biweek_labels[-1] != '':
-		biweek_labels.append('')
+	# if biweek_labels[-1] != '':
+	# 	biweek_labels.append('')
 	# print(biweek_labels)
 
 
@@ -154,12 +156,19 @@ def run(args):
 	X = np.zeros(365)
 	for cnt, (key, val) in enumerate(time_per_day.items()):
 		# convert key to index
-		idx = days_elapsed('1-1-'+args.year, key)
+		# idx = days_elapsed('1-1-'+args.year, key)
+		idx = days_elapsed(str_start_date, key)
 		X[idx] = val
 		last_idx = idx
 
 	X = np.resize(X, last_idx+1) # only log up to the current day
 	avg_X_arr = X.mean()*np.ones(len(X))
+
+
+	### fix this later. so messy
+	while len(biweek_labels) < len(np.arange(0, len(X), 7)):
+		biweek_labels.append('')
+
 
 	### scatter plot of daily time
 	plt.figure()
@@ -241,7 +250,7 @@ def run(args):
 	# https://pythonawesome.com/calendar-heatmaps-from-pandas-time-series-data/
 	try_not_use_pandas = False
 	if try_not_use_pandas:
-		all_days = pd.date_range('1/1/'+args.year, periods=days_elapsed('1-1-'+args.year, end_date.strftime("%m-%d-%Y"))+1)
+		all_days = pd.date_range(str_start_date.replace('-','/'), periods=days_elapsed(str_start_date, end_date.strftime("%m-%d-%Y"))+1)
 		events = pd.Series(X, index=all_days)
 		plt.figure()
 		calplot.calplot(events, dropzero=True, cmap='YlGn')
@@ -292,7 +301,7 @@ if __name__ == '__main__':
 	    help="relative path to save current day txt file")
 	parser.add_argument('-f', '--figdir', default='figures', 
 	    help="folder to save figures in")
-	parser.add_argument('-y', '--year', default='2021', 
-	    help='Year of data')
+	parser.add_argument('-s', '--startdate', default='2021-01-01', 
+	    help='Start date to make figures from')
 	args = parser.parse_args()
 	run(args)
