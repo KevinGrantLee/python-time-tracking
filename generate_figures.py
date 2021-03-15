@@ -15,9 +15,9 @@ import configparser
 import math
 
 import numpy as np
-# import pandas as pd
+import pandas as pd
 import matplotlib.pyplot as plt
-# import calplot
+import calplot
 
 
 def convert2date(date):
@@ -37,8 +37,9 @@ def time_elapsed(start, end):
 
 	start_time = convert_time(start)
 	end_time = convert_time(end)
-	assert end_time >= start_time, 'Error: end time is earlier than start time'
-	return end_time - start_time
+	# assert end_time >= start_time, 'Error: end time is earlier than start time'
+	elapsed = end_time - start_time
+	return elapsed
 
 
 def days_elapsed(start, end):
@@ -116,6 +117,8 @@ def run(args):
 				elif '-  stop:' in line:
 					stop_time = line.split(' ')[-1]
 					elapsed_time = time_elapsed(start_time, stop_time)
+					assert elapsed_time >= 0, 'Error on day {}'.format(day_key)
+
 					time_per_topics[last_topic] += elapsed_time
 					cur_day_data[last_topic] += elapsed_time
 					num_stops += 1
@@ -248,7 +251,7 @@ def run(args):
 
 	### calendar heatmap
 	# https://pythonawesome.com/calendar-heatmaps-from-pandas-time-series-data/
-	try_not_use_pandas = False
+	try_not_use_pandas = True
 	if try_not_use_pandas:
 		all_days = pd.date_range(str_start_date.replace('-','/'), periods=days_elapsed(str_start_date, end_date.strftime("%m-%d-%Y"))+1)
 		events = pd.Series(X, index=all_days)
