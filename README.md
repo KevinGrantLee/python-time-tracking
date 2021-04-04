@@ -26,6 +26,12 @@ To stop current topic: ``` stop ```
 
 To open log file in notepad: ``` open ```
 
+OR: you can run
+
+```
+python gui_time_logger.py [-d dir]
+```
+
 
 Here is an example of an entry in the txt file:
 
