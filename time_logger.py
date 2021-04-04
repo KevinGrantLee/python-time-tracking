@@ -53,7 +53,7 @@ class Time_Logger:
                 self.topic != '-  start:' and
                 self.topic != '-  stop:' and 
                 topic):
-            print(f'# Starting new topic "{topic}" at {time}')
+            print(f'# START: "{topic}": {time}')
             with open(self.log_path, 'a') as fp:
                 fp.write(f'@{topic}:\n')
                 fp.write(f'-  start:  {time}\n')
@@ -64,7 +64,7 @@ class Time_Logger:
             
     def stop(self, time=datetime.datetime.now().strftime("%H:%M")):
         if self.topic:
-            print(f'# Stopping current topic "{self.topic}" at {time}')
+            print(f'# STOP: "{self.topic}": {time}')
             with open(self.log_path, 'a') as fp:
                 fp.write(f'-  stop:   {time}\n\n')
             self.topic = ''
@@ -75,7 +75,7 @@ class Time_Logger:
     def note(self, note_str):
         time = datetime.datetime.now().strftime("%H:%M")
         if self.topic:
-            print(f'Writing note to topic "{self.topic}" at {time}')
+            print(f'NOTE: "{note_str}": "{self.topic}": {time}')
             with open(self.log_path, 'a') as fp:
                 if self.last_action != 'note':
                     fp.write('-  notes:\n')
@@ -156,8 +156,8 @@ parser.add_argument('-d', '--dir', default='2021_logs',
     help='relative path to save current day txt file')
 parser.add_argument('-f', '--figdir', default='figures', 
     help="folder to save figures in")
-parser.add_argument('-y', '--year', default='2021', 
-    help='year of data')
+parser.add_argument('-s', '--startdate', default='2021-01-01', 
+    help='Start date to make figures from')
 args = parser.parse_args()
 if not os.path.isdir(args.dir):
     os.makedirs(args.dir)
@@ -166,5 +166,4 @@ if args.figdir != '':
         os.makedirs(args.figdir)
 
 if __name__=='__main__':
-    print('need to add option to start/stop at arbitrary times')
     run(args)
