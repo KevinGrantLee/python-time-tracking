@@ -13,7 +13,7 @@ Here is a picture of the GUI:
 
 ## Usage
 ```
-python time_logger.py [-d dir]
+python gui_time_logger.py
 ```
 
 Once the script is running, there are 4 commands:
