@@ -37,23 +37,29 @@ def reset_config(config):
 #     except:
 #         StartDate = ''
 
-def set_window(window, setting):
+def set_window_status(window, start):
     """
-    setting==False means that just START a  new topic
-    setting==True means just STOP a topic
+   start == True means we have just clicked "START"
+   start == False means we have just clicked "STOP"
     """
-    window['-TOPIC-'](disabled=not setting)
-    window['-FOLDER-'](disabled=not setting)
-    window['-BROWSE-'](disabled=not setting)
-    window['-ADDNOTE-'](disabled=setting)
+    window['-FOLDER-'](disabled=not start)
+    window['-BROWSE-'](disabled=not start)
+    window['-ADDNOTE-'](disabled=start)
+    window['-START-'](disabled=not start)
+    window['-STOP-'](disabled=start)
 
-    window['-START-'](disabled=not setting)
-    window['-STARTH-'](disabled=not setting)
-    window['-STARTM-'](disabled=not setting)
-
-    window['-STOP-'](disabled=setting)
-    window['-STOPH-'](disabled=setting)
-    window['-STOPM-'](disabled=setting)
+    if start:
+        window['-TOPIC-']('', disabled=not start)
+        window['-STARTH-']('', disabled=not start)
+        window['-STARTM-']('', disabled=not start)
+        window['-STOPH-']('', disabled=start)
+        window['-STOPM-']('', disabled=start)
+    else:
+        window['-TOPIC-'](disabled=not start)
+        window['-STARTH-'](disabled=not start)
+        window['-STARTM-'](disabled=not start)
+        window['-STOPH-'](disabled=start)
+        window['-STOPM-'](disabled=start)
 
 config = configparser.ConfigParser()
 config.read('settings.ini')
@@ -170,7 +176,7 @@ while True:
             continue
 
         m_time_logger.start(topic, time=start_time)
-        set_window(window, False)
+        set_window_status(window, False)
 
     elif event == '-STOP-':
         if values['-STOPH-'] == '' and values['-STOPM-'] == '':
@@ -185,7 +191,7 @@ while True:
             continue
 
         m_time_logger.stop(time=stop_time)
-        set_window(window, True)
+        set_window_status(window, True)
 
 
     elif event == '-ADDNOTE-':
