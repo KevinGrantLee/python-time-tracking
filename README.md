@@ -12,6 +12,8 @@ Here is a picture of the GUI:
 
 
 ## Usage
+
+
 ```
 python gui_time_logger.py
 ```
@@ -26,10 +28,10 @@ To stop current topic: ``` stop ```
 
 To open log file in notepad: ``` open ```
 
-OR: you can run
+OR: if you prefer a gui, you can run
 
 ```
-python gui_time_logger.py [-d dir]
+python gui_time_logger.py
 ```
 
 
