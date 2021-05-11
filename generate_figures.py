@@ -203,10 +203,9 @@ def run(args):
 	plt.savefig(os.path.join(args.figdir,'Pie chart.png'))
 	plt.close()
 
-
 	### histogram of total daily time, stacked
 	plt.figure()
-	plt.hist(separated_time_per_day.values(), bins=10, density=True, label=separated_time_per_day.keys(), stacked=True)
+	plt.hist(separated_time_per_day.values(), range=[0.1,15], bins=10, density=True, label=separated_time_per_day.keys(), stacked=True)
 
 	xmin, xmax = plt.xlim()
 	x = np.linspace(xmin, xmax, 100)
@@ -234,6 +233,7 @@ def run(args):
 	plt.figure()
 	for cnt, (mtopic, val) in enumerate(separated_time_per_day.items()):
 		every_fourteen_days_sum = np.add.reduceat(val, np.arange(0, len(val), 7))
+		# print(mtopic, every_fourteen_days_sum)
 		if cnt ==  0:
 			plt.bar(ind, every_fourteen_days_sum, label=mtopic)
 		else:
@@ -246,7 +246,6 @@ def run(args):
 	plt.tight_layout() # make space for rotated xtick labels
 	plt.savefig(os.path.join(args.figdir,'weekly time stacked.png'))
 	plt.close()
-
 
 
 	### calendar heatmap
@@ -264,7 +263,8 @@ def run(args):
 
 	### clock figure showing what times i usually work
 	N = 24
-	bottom = 60
+	# bottom = 60
+	bottom = 0
 
 	# width of each bin on the plot
 	width = (2*np.pi) / N
@@ -274,6 +274,7 @@ def run(args):
 
 	# create the data
 	hour_log = minutes_log.reshape((24,60)).sum(axis=1)
+	hour_log = hour_log / np.sum(hour_log)
 
 	# make a polar plot
 	plt.figure(figsize = (12, 8))
